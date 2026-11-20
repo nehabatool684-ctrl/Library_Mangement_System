@@ -1,0 +1,10 @@
+void displayMenu(){
+    printf("\n===== UNIVERSITY LIBRARY MANAGEMENT SYSTEM =====\n");
+    printf("1. Register Member\n");
+    printf("2. Display Available Books\n");
+    printf("3. Borrow a Book\n");
+    printf("4. Return a Book\n");
+    printf("5. Display Member Record\n");
+    printf("6. Exit\n");
+    printf("Enter your choice: ");
+}
