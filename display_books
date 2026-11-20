@@ -1,0 +1,6 @@
+void displayBooks(int bookIDs[], char bookTitles[][50], int availableCopies[],int totalBooks){
+	int i;
+    for(i=0;i<totalBooks;i++){
+    	printf("| %d \t|    %s \t        |   %d |\n",bookIDs[i],bookTitles[i],availableCopies[i]);
+	}
+}
