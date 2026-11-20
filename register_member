@@ -1,0 +1,12 @@
+void registerMember(char name[], int *studentID, int *memberType){
+	printf("Enter Member Name :\n");
+	scanf(" %[^\n]", name);
+	printf("Enter Student ID :\n");
+	scanf("%d",studentID);
+	printf("Enter member type : \n 1-Faculty \n 2-Student \n");
+	scanf("%d",memberType);
+	while(*memberType<1||*memberType>2){
+	printf("Enter member type : \n 1-Faculty \n 2-Student \n");
+	scanf("%d",memberType);
+	}
+}
