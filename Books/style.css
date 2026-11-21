@@ -1,0 +1,35 @@
+h1 {
+    background-color: navy;
+    color: white;
+}
+
+iframe {
+    width: 90%;
+    height: 350px;
+    border: none;
+  
+}
+div{
+    background-image: url(./libimage4.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    BACKGROUND-ATTACHMENT: fixed;
+    background-position: center;
+    min-height: 100vh;
+    width: 100%;
+    opacity: 0.9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+*{
+    padding: 0%;
+    margin: 0%;
+}
+a{
+    color: white;
+    text-decoration: none;
+    padding: 20px;
+    
+}
