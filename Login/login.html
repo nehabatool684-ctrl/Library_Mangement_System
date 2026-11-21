@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Login</title>
+  <style>
+    .main-login{
+    height: 100%;
+    width: 500px;
+    padding: 10px;
+    background-color: maroon;
+    color: whitesmoke;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+     border:5px groove white;
+     margin-top: 50px;
+
+}
+*{
+    background-color: whitesmoke;
+    margin:0;
+    padding: 0%;
+}
+form{
+    background-color: maroon;
+    color: black;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+label{
+     border-radius: 20px;
+    padding: 10px;
+    
+
+}
+button{
+    margin-top: 10px;
+    border-radius: 20px;
+    background-color: maroon;
+    color: white;
+    padding: 20px;
+
+}
+p{
+  background-color: maroon;
+  color: white;
+}
+.main{
+    width: 100%;
+    height: 100%;
+    background-image: url('./login image.jpg');
+     background-size: cover;
+    background-repeat: no-repeat;
+    BACKGROUND-ATTACHMENT: fixed;
+    background-position: center;
+    min-height: 100vh;
+    width: 100%;
+    opacity: 0.7;
+    gap: 10px;
+    display: flex;
+    justify-content: center;
+}
+input{
+    padding: 10px;
+    border-radius: 20px;
+}
+
+h2{
+    text-align: center;
+    color: white;
+    background-color: maroon;
+}
+a{
+    color:white;
+    text-decoration: none;
+    padding: 10px;
+    background-color: maroon;
+    border-radius: 10px;
+    border: 2px groove white;
+    margin-bottom: 10px;
+
+    
+}
+  </style>
+</head>
+<body>
+   <div class="main">
+    <div class="main-login">
+  <h2>Login</h2>
+  <form action="http://localhost/cgi-bin/login.exe" method="post">
+    <input type="hidden" name="action" value="login">
+    <p>Username: <input type="text" name="username" required></p>
+    <p>Password: <input type="password" name="password" required></p>
+    <p><input type="submit" value="Login"></p>
+  </form>
+  <p>No account? <a href="register.html">Register here</a></p>
+  </div>
+</div>
+</body>
+</html>
