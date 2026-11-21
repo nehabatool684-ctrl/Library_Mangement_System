@@ -8,6 +8,7 @@
     background-color: brown;
     border-radius: 10px;
 }
+
 .page-back{
     background-image: url('./lib back.jpg');
     text-align: center;
@@ -88,7 +89,16 @@ margin-left: 70px;
 }
 .header{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+
+}
+h4{
+    color: white;
+
+}
+.aims{
+    color: white;
+    text-align: left;
 }
 .intro_text{
     color: white;
@@ -135,11 +145,17 @@ footer {
     margin-top: 20px;
     background-color:rgba(0, 0, 0, 0.5);
     color: white;
+    a:link, a:visited {
+   text-decoration: none;
+   color: white;
+   text-align: center;
+}
 }
 .imagesmain{
     width: 300px;
     height: 400px;
-    border-radius: 10px;
+    border-top-left-radius: 50%;
+     border-top-right-radius: 50%;
     border: 2px solid white;
 }
 .imagesmain:hover{
@@ -158,5 +174,25 @@ footer {
     margin-top: 200px;
     border-left: none;
      border-right: none;
+    }
+.display-main{
+    width: 100%;
+    height: 100%;
+    background-image: url(./libimage4.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    BACKGROUND-ATTACHMENT: fixed;
+    background-position: center;
+    min-width: 100vh;    
+}
+
+.actions-move{
+    color: white;
+    text-decoration: none;
+     background-color: brown;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #999;
+    padding: 10px;
     
 }
