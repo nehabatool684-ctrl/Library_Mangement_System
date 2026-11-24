@@ -1,121 +1,117 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <stdio.h>   
+#include <string.h> 
 
-
-#define OUT_FILE "C:/xampp/htdocs/assignment/books.txt"
-
-static void url_decode(char *dst, const char *src) {
-    while (*src) {
-   
-        if (*src == '+') {
-            *dst++ = ' ';
-            src++;
-        }
-     
-        else if (*src == '%' && src[1] && src[2]) {
-            char hex[3] = { src[1], src[2], 0 };
-            *dst++ = (char)strtol(hex, NULL, 16);
-            src += 3;
-        }
-     
-        else {
-            *dst++ = *src++;
-        }
+#define BOOKS_FILE "C:/xampp/htdocs/assignment/books.txt"
+#define HTML_FILE  "C:/xampp/htdocs/assignment/books/books.html"
+//removing extra spaces
+char *trim(char *s) {
+    char *end;
+    
+    while (*s == ' ') s++;
+     end = s + strlen(s);
+    while (end > s && (end[-1] == ' ' || end[-1] == '\n' || end[-1] == '\r')) {
+        end--;
+        *end = 0;
     }
-    /* terminate the decoded string */
-    *dst = 0;
+    return s;
 }
-
-
-static void get_field(const char *data, const char *name, char *out, size_t outsz) {
-   
-    char key[64];
-    snprintf(key, sizeof key, "%s=", name);
-    size_t klen = strlen(key);
-    const char *p = data;
-    out[0] = 0;
-
-  
-    while ((p = strstr(p, key)) != NULL) {
-       
-        if (p == data || p[-1] == '&') {
-        
-            p += klen;
-            size_t n = strcspn(p, "&");
-
-        
-            char *raw = malloc(n + 1);
-            char *dec = malloc(n + 1);
-            memcpy(raw, p, n);
-            raw[n] = 0;
-            url_decode(dec, raw);
-
-     
-            strncpy(out, dec, outsz - 1);
-            out[outsz - 1] = 0;
-            free(raw);
-            free(dec);
+//======================================================
+int main() {
+    FILE *fp; //dealing with input file
+    FILE *output;        //dealing with output file(new one)
+    char line[300], copy[300];/* 'line' is chopped up by strtok, 'copy' keeps an
+                                 untouched version for error messages */
+    char *book, *id, *author, *stock; 
+    int total = 0, shown = 0; /* total = non-empty lines read,
+                                 shown = lines successfully written to HTML */
 
     
-            for (char *c = out; *c; c++)
-                if (*c == '\n' || *c == '\r') *c = ' ';
-            return;
+    fp = fopen(BOOKS_FILE, "r");
+    if (fp == NULL) {
+        printf("File not found: %s\n", BOOKS_FILE);
+        return 1;
+    }
+    output = fopen(HTML_FILE, "w");
+    if (output == NULL) {
+        printf("Cannot create output file: %s\n", HTML_FILE);
+        fclose(fp);          
+        return 1;
+    }
+//writing for html page output
+    fprintf(output, "<html><body>");
+    fprintf(output, "<h2>Library Book Records</h2>");
+    fprintf(output, "<table border='1' cellpadding='6'>");
+    fprintf(output, "<tr><th>ID</th><th>Book</th><th>Author</th><th>Stock</th></tr>");
+
+    /* Read the input file one line at a time until the end of the file */
+    while (fgets(line, sizeof(line), fp)) {
+        /* Save a copy of the line, because strtok will modify 'line' */
+        strcpy(copy, line);
+        /* Remove the newline characters from the copy (used in error output) */
+        copy[strcspn(copy, "\r\n")] = 0;
+        if (copy[0] == 0) continue;           
+        total++;                          
+//separating the lines in txt file for processing
+        book   = strtok(line, "|,");
+        id     = strtok(NULL, "|,");
+        author = strtok(NULL, "|,");
+        stock  = strtok(NULL, "|,");
+//only work if every data required is added
+        if (book && id && author && stock) {
+        // removing unwanted spaces around each data 
+            fprintf(output, "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
+                    trim(id), trim(book), trim(author), trim(stock));
+            shown++;                         //counting complete row traversal in txt file
+        } else {
+            // when any one data is not present 
+            printf("Could not read line %d: [%s]\n", total, copy);
         }
-     
-        p += klen;
     }
+
+    fprintf(output, "</table>");
+   
+    if (shown == 0) fprintf(output, "<p>No books found.</p>");
+
+    fprintf(output, "</body></html>");
+    fclose(fp);
+    fclose(output);
+
+   // summary for console
+    printf("Lines read: %d, books shown: %d\n", total, shown);
+    return 0;   
 }
+    fprintf(output, "<html><body>");
+    fprintf(output, "<h2>Library Book Records</h2>");
+    fprintf(output, "<table border='1' cellpadding='6'>");
+    fprintf(output, "<tr><th>ID</th><th>Book</th><th>Author</th><th>Stock</th></tr>");
 
+    while (fgets(line, sizeof(line), fp)) {
+        strcpy(copy, line);
+        copy[strcspn(copy, "\r\n")] = 0;
+        if (copy[0] == 0) continue;            //skipping empty lines
+        total++;
 
-int main(void) {
-    char data[4096] = "";
-    char *method = getenv("REQUEST_METHOD");
+        book   = strtok(line, "|,");
+        id     = strtok(NULL, "|,");
+        author = strtok(NULL, "|,");
+        stock  = strtok(NULL, "|,");
 
-    /* POST: the form data arrives on standard input; CONTENT_LENGTH says how
-       many bytes to read (capped to the buffer size to prevent overflow) */
-    if (method && strcmp(method, "POST") == 0) {
-        char *len = getenv("CONTENT_LENGTH");
-        int n = len ? atoi(len) : 0;
-        if (n > (int)sizeof(data) - 1) n = sizeof(data) - 1;
-        size_t got = fread(data, 1, n, stdin);
-        data[got] = 0;
-    }
-    /* GET: the form data is in the URL after '?', supplied as QUERY_STRING */
-    else {
-        char *q = getenv("QUERY_STRING");
-        if (q) strncpy(data, q, sizeof(data) - 1);
-    }
-//=====================OUR CONCERN=================================
-    /* extract and decode the three form fields */
-    char name[256], id[64], author[256];
-    get_field(data, "bookname", name, sizeof name);
-    get_field(data, "bookid", id, sizeof id);
-    get_field(data, "author", author, sizeof author);
-
-    /* writing in books.html for representation */
-    printf("Content-Type: text/html\r\n\r\n");
-    printf("<html><body>");
-
-    /* open the file in append mode so earlier records are kept */
-    FILE *fptr = fopen(OUT_FILE, "a");
-
-    /* if the file could not be opened, show an error message */
-    if (fptr == NULL) {
-        printf("<p>Error: could not open " OUT_FILE "</p>");
-        printf("<p>Check that the folder exists.</p>");
-    }
-    /* otherwise save the record as "id | name | author", close the file,
-       and show the saved values with a success message */
-    else {
-        fprintf(fptr, "%s | %s | %s\n", id, name, author);
-        fclose(fptr);
-        printf("<p>Book Name: %s</p><p>Book ID: %s</p><p>Author: %s</p>", name, id, author);
-        printf("<p>Added successfully.</p>");
+        if (book && id && author && stock) {
+            fprintf(output, "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
+                    trim(id), trim(book), trim(author), trim(stock));
+            shown++;
+        } else {
+            printf("Could not read line %d: [%s]\n", total, copy);
+        }
     }
 
-    /* link back to the form, close the HTML page, and finish */
-    printf("<p><a href=\"/assignment/form.html\">Back to form</a></p>");
-    printf("</body></html>");
+    fprintf(output, "</table>");
+    if (shown == 0) fprintf(output, "<p>No books found.</p>");
+    fprintf(output, "</body></html>");
+
+    fclose(fp);
+    fclose(output);
+
+    printf("Lines read: %d, books shown: %d\n", total, shown);
     return 0;
 }
